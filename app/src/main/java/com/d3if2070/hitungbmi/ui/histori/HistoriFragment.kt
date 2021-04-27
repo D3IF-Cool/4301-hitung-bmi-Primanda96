@@ -2,24 +2,24 @@ package com.d3if2070.hitungbmi.ui.histori
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.d3if2070.hitungbmi.R
 import com.d3if2070.hitungbmi.databinding.FragmentHistoriBinding
 import com.d3if2070.hitungbmi.databinding.FragmentHitungBinding
 import com.d3if2070.hitungbmi.db.BmiDb
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class HistoriFragment : Fragment() {
-    private val viewModel: HistoryViewModel by lazy {
+    private val viewModel: HistoriViewModel by lazy {
         val db = BmiDb.getInstance(requireContext())
         val factory = HistoriViewModelFactory(db.dao)
-        ViewModelProvider(this, factory).get(HistoryViewModel::class.java)
+        ViewModelProvider(this, factory).get(HistoriViewModel::class.java)
     }
 
     private lateinit var binding: FragmentHistoriBinding
@@ -36,6 +36,8 @@ class HistoriFragment : Fragment() {
             adapter = myAdapter
             setHasFixedSize(true)
         }
+        setHasOptionsMenu(true)
+
         return binding.root
     }
 
@@ -46,6 +48,30 @@ class HistoriFragment : Fragment() {
                 View.VISIBLE else View.GONE
             myAdapter.updateData(it)
         })
-
     }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.histori_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_hapus) {
+            hapusData()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    private fun hapusData() {
+        MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.konfirmasi_hapus)
+                .setPositiveButton(getString(R.string.hapus)) { _, _ ->
+                    viewModel.hapusData()
+                }
+                .setNegativeButton(getString(R.string.batal)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .show()
+    }
+
+
 }
