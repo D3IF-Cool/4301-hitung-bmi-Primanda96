@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/historiFragment"
         android:name="com.d3if2070.hitungbmi.ui.histori.HistoriFragment"
-        android:label="@string/histori"
-        tools:layout="@layout/fragment_histori" />
+        tools:layout="@layout/fragment_histori"
+        android:label="@string/histori" />
 
 </navigation>
